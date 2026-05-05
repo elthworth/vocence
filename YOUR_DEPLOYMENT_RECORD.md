@@ -49,12 +49,12 @@ Saving to ../enhanced_model_v2_finetuned/model.safetensors...
 
 **Method**: HuggingFace CLI  
 **Repository**: `Ichiro1007/vocence_enhanced_miner_v2`  
-**Token**: `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`
+**Token**: `hf_YourTokenHere` (your actual HF token)
 
 **Commands**:
 ```bash
 cd /workspace/vocence/enhanced_model_v2_finetuned
-export HF_TOKEN="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"
+export HF_TOKEN="hf_YourTokenHere"  # Replace with your actual token
 
 # Upload entire directory
 huggingface-cli upload Ichiro1007/vocence_enhanced_miner_v2 . . \
