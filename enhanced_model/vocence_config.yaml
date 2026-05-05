@@ -1,0 +1,17 @@
+# Miner + /health metadata. Weights live in this HF repo (no runtime model_id).
+runtime:
+  adapter: "qwen3_tts_repo_snapshot"
+  device_preference: "cuda"
+  dtype: "bfloat16"
+  default_language: "English"
+  use_flash_attention_2: false
+  num_candidates: 8  # Enhanced best-of-N with diversity-aware selection
+
+generation:
+  sample_rate: 24000
+  max_seconds: 30
+
+limits:
+  max_text_chars: 2000
+  max_instruction_chars: 600
+  default_language: "English"
