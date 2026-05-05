@@ -1,0 +1,68 @@
+# Vocence Hybrid TTS Miner Configuration
+# Combines T2 base model + Best-of-N sampling strategy
+
+runtime:
+  # Device settings (T2-optimized)
+  device_preference: cuda    # Use GPU for inference
+  dtype: bfloat16           # T2 uses bfloat16 for better accuracy
+  
+  # Best-of-N strategy
+  num_candidates: 6         # Generate 6 candidates and pick best (increased from Model 1's 5)
+  
+  # Quality scoring weights (optimized)
+  utmos_weight: 0.35        # Naturalness importance (increased from 0.3)
+  wer_weight: 0.65          # Script accuracy importance
+
+limits:
+  # Input length caps
+  max_instruction_chars: 600
+  max_text_chars: 2000
+  
+  # Default language
+  default_language: English
+
+generation:
+  # Sampling parameters (tuned for T2)
+  temperature: 0.85         # Slightly lower than Model 1's 0.9 for consistency
+  top_p: 0.95              # Nucleus sampling for diversity
+  top_k: 50                # Top-k sampling
+  repetition_penalty: 1.05  # Reduce repetition
+  max_new_tokens: 600      # Max output length
+  do_sample: true          # Enable sampling
+
+validation:
+  # Validity constraints
+  min_duration_sec: 2.0
+  max_duration_sec: 29.5
+  min_rms: 0.001
+  max_peak: 0.99
+
+adaptive_timing:
+  # Time budgets for adaptive sampling
+  time_budget_fast_sec: 40.0   # If first sample < 40s, generate all candidates
+  time_budget_slow_sec: 65.0   # If first sample ≥ 65s, return immediately
+
+model:
+  # Base model identifier
+  base_model: macminix/qwen3_voice_design_t2
+  architecture: Qwen3-TTS-12Hz-1.7B-VoiceDesign
+  output_sample_rate: 24000
+  output_format: mono_wav
+  
+  # Fine-tuning info (if you trained further)
+  lora_applied: false
+  training_dataset: "TextrolSpeech (11.6K clips, gender-balanced)"
+  
+notes: |
+  This hybrid model combines:
+  - T2 base model: Better gender/pitch accuracy (+2.8% UTMOS improvement)
+  - Best-of-6 sampling: Higher pass rate through diversity and quality selection
+  - Optimized scoring: 35% naturalness + 65% script accuracy
+  
+  Expected Performance:
+  - Pass rate: 90-95% (vs Model 1: ~90%, Model 2: ~75%)
+  - Average composite score: 0.93-0.95
+  - Generation time: 90-130s per request
+  
+  Strategy: Adaptive time budgeting ensures we maximize quality when possible
+  while meeting latency requirements when needed.

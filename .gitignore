@@ -34,3 +34,5 @@ data/
 # Daily serve logs (UTC)
 logs/
 *.wav
+
+venv
